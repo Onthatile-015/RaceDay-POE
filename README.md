@@ -56,7 +56,8 @@ A GitHub Actions workflow (.github/workflows/validate-docs.yml) runs on every pu
 
 Successful build screenshot:
 
-[INSERT SCREENSHOT HERE]
+<img width="775" height="65" alt="Screenshot 2026-09-04 161248" src="https://github.com/user-attachments/assets/4bda6d09-c30e-4c90-8ee4-6ac5330bd65e" />
+
 
 ## Video Walkthrough
 
