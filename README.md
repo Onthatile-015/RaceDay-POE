@@ -11,8 +11,8 @@ This repository covers Part 1 which is System Planning and Database: an Entity R
 
 The system supports two distinct user roles:
 
-Organiser — can create, edit and delete events, manage event categories, capture participant results, and view all event enrolments.
-Participant — can create an account, browse events, enter an event by selecting a category, view their own enrolments, and track their personal results.
+Organiser can create, edit and delete events, manage event categories, capture participant results and view all event enrolments.
+Participant can create an account, browse events, enter an event by selecting a category, view their own enrolments and track their personal results.
 
 Role-based access will be enforced at the API level in Part 2 and reflected consistently in the MVC interface in Part 3.
 
