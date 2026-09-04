@@ -1,11 +1,11 @@
 # RaceDay
 ## Description
 
-RaceDay is a full-stack, web-based event management system built for the South African road running, walking, and cycling community. Many community races are currently managed through paper-based registration, spreadsheets, and disconnected communication channels — RaceDay replaces that with a single platform.
+RaceDay is a full-stack, web-based event management system built for the South African road running, walking, and cycling community. Many community races are currently managed through paper-based registration, spreadsheets, and disconnected communication channels so a RaceDay replaces that with a single platform.
 
-Event Organisers can create and manage events, categories, and participant results. Participants can browse upcoming events, enter events by selecting a category, track their personal performance history, and prepare for race day using venue information.
+Event Organizers can create and manage events, categories and participant results. Participants can browse upcoming events, enter events by selecting a category, track their personal performance history and prepare for race day using venue information.
 
-This repository covers Part 1 — System Planning and Database: an Entity Relationship Diagram, a full API endpoint plan, and a SQL Server database script. No application code is written in this part so Part 2 (RESTful API) and Part 3 (MVC web application) will be build on this planning.
+This repository covers Part 1 which is System Planning and Database: an Entity Relationship Diagram, a full API endpoint plan and a SQL Server database script. No application code is written in this part so Part 2 (RESTful API) and Part 3 (MVC web application) will be build on this planning.
 
 ## Roles
 
