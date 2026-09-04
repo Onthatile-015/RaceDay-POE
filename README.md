@@ -32,7 +32,7 @@ See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints coveri
 
 ## Database Script (Section C)
 
-docs/raceday_database_script.sql creates the full schema in SQL Server (SSMS), with primary keys, foreign keys, and constraints (NOT NULL, UNIQUE, DEFAULT, CHECK) for all 6 tables, and seeds the database with:
+docs/raceday_database_script.sql creates the full schema in SQL Server (SSMS), with primary keys, foreign keys and constraints (NOT NULL, UNIQUE, DEFAULT, CHECK) for all 6 tables, and seeds the database with:
 
 2 Organisers and 2 Participants
 3 Events
@@ -45,7 +45,7 @@ To run: open the script in SSMS and execute it.
 
 ## CI/CD
 
-A GitHub Actions workflow (.github/workflows/validate-docs.yml) runs on every push to main and validates that the /docs folder exists and contains the ERD, endpoint plan, and SQL script.
+A GitHub Actions workflow (.github/workflows/validate-docs.yml) runs on every push to main and validates that the /docs folder exists and contains the ERD, endpoint plan and SQL script.
 
 Successful build screenshot:
 
@@ -54,6 +54,6 @@ Successful build screenshot:
 
 ## Video Walkthrough
 
-Unlisted YouTube video explaining the planning documents, ERD decisions, endpoint plan choices, and a live run of the SQL script in SSMS:
+Unlisted YouTube video explaining the planning documents, ERD decisions, endpoint plan choices and a live run of the SQL script in SSMS:
 
 https://youtu.be/8GjexLvnfMI
