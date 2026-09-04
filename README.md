@@ -5,7 +5,7 @@ RaceDay is a full-stack, web-based event management system built for the South A
 
 Event Organisers can create and manage events, categories, and participant results. Participants can browse upcoming events, enter events by selecting a category, track their personal performance history, and prepare for race day using venue information.
 
-This repository covers Part 1 — System Planning and Database: an Entity Relationship Diagram, a full API endpoint plan, and a SQL Server database script. No application code is written in this part so Parts 2 (RESTful API) and 3 (MVC web application) will be build on this planning.
+This repository covers Part 1 — System Planning and Database: an Entity Relationship Diagram, a full API endpoint plan, and a SQL Server database script. No application code is written in this part so Part 2 (RESTful API) and Part 3 (MVC web application) will be build on this planning.
 
 ## Roles
 
@@ -35,7 +35,7 @@ Enrolment resolves the many-to-many relationship between Participants and Catego
 Result is captured against an Enrolment once the event has taken place.
 ## API Endpoint Plan (Section B)
 
-See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints covering Authentication, User Profile, Events, Categories, Enrolments, and Results, each with HTTP method, route, description, role required, request body, and expected response.
+See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints covering Authentication, User Profile, Events, Categories, Enrolments, and Results, each with HTTP method, route, description, role required, request body and expected response.
 
 ## Database Script (Section C)
 
