@@ -16,14 +16,7 @@ Participant — can create an account, browse events, enter an event by selectin
 
 Role-based access will be enforced at the API level in Part 2 and reflected consistently in the MVC interface in Part 3.
 
-## Repository Structure
-docs/
-├── raceday_erd.png                  # Section A — Entity Relationship Diagram
-├── raceday_api_endpoint_plan.md     # Section B — API Endpoint Plan
-└── raceday_database_script.sql      # Section C — SQL Database Script
-.github/
-└── workflows/
-    └── validate-docs.yml            # CI/CD workflow validating /docs structure
+
 ## Database Design (Section A)
 
 The ERD (docs/raceday_erd.png) contains 6 entities: User, Event, Category, Venue, Enrolment, Result.
