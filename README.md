@@ -19,7 +19,7 @@ Role-based access will be enforced at the API level in Part 2 and reflected cons
 
 ## Database Design (Section A)
 
-The ERD (docs/raceday_erd.png) contains 6 entities: User, Event, Category, Venue, Enrolment, Result.
+The ERD (docs/raceday_erd.png) contains 6 entities which is User, Event, Category, Venue, Enrolment, Result.
 
 User holds both Organisers and Participants, distinguished by a role column.
 Event belongs to an Organiser (User) and has many Category and Venue records.
@@ -28,7 +28,7 @@ Enrolment resolves the many-to-many relationship between Participants and Catego
 Result is captured against an Enrolment once the event has taken place.
 ## API Endpoint Plan (Section B)
 
-See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints covering Authentication, User Profile, Events, Categories, Enrolments, and Results, each with HTTP method, route, description, role required, request body and expected response.
+See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints covering Authentication, User Profile, Events, Categories, Enrolments and Results, each with HTTP method, route, description, role required, request body and expected response.
 
 ## Database Script (Section C)
 
