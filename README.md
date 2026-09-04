@@ -35,7 +35,7 @@ Enrolment resolves the many-to-many relationship between Participants and Catego
 Result is captured against an Enrolment once the event has taken place.
 ## API Endpoint Plan (Section B)
 
-See docs/raceday_api_endpoint_plan.md for the full table of 19 endpoints covering Authentication, User Profile, Events, Categories, Enrolments, and Results, each with HTTP method, route, description, role required, request body, and expected response.
+See docs/raceday_api_endpoint_plan.pdf for the full table of 20 endpoints covering Authentication, User Profile, Events, Categories, Enrolments, and Results, each with HTTP method, route, description, role required, request body, and expected response.
 
 ## Database Script (Section C)
 
@@ -48,7 +48,7 @@ docs/raceday_database_script.sql creates the full schema in SQL Server (SSMS), w
 4 sample Enrolments
 2 sample Results
 
-To run: open the script in SSMS and execute it — it creates the RaceDayDB database if it does not already exist.
+To run: open the script in SSMS and execute it.
 
 ## CI/CD
 
