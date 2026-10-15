@@ -19,6 +19,8 @@ namespace RaceDay.Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             base.OnModelCreating(modelBuilder);
 
             // User -> unique email
@@ -54,6 +56,13 @@ namespace RaceDay.Api.Data
                 .WithMany(u => u.CapturedResults)
                 .HasForeignKey(r => r.CapturedByOrganiserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Event>().ToTable("Event");
+            modelBuilder.Entity<Category>().ToTable("Category");
+            modelBuilder.Entity<Venue>().ToTable("Venue");
+            modelBuilder.Entity<Enrolment>().ToTable("Enrolment");
+            modelBuilder.Entity<Result>().ToTable("Result");
         }
 
     }
