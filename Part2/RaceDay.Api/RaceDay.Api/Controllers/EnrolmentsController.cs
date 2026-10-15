@@ -18,6 +18,9 @@ namespace RaceDay.Api.Controllers
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        /// <summary>Cancels the logged-in Participant's own enrolment.</summary>
+        /// <response code="204">Enrolment cancelled.</response>
+        /// <response code="403">Not your enrolment.</response>
         // DELETE /api/enrolments/{id}  (Participant, own only)
         [HttpDelete("{id}")]
         [Authorize(Roles = "Participant")]
@@ -32,6 +35,9 @@ namespace RaceDay.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>Captures a result for an enrolment, by the Organiser who owns the related event.</summary>
+        /// <response code="201">Result captured.</response>
+        /// <response code="409">A result already exists for this enrolment.</response>
         // POST /api/enrolments/{id}/results  (Organiser)
         [HttpPost("{id}/results")]
         [Authorize(Roles = "Organiser")]
@@ -62,6 +68,9 @@ namespace RaceDay.Api.Controllers
             return StatusCode(StatusCodes.Status201Created, result);
         }
 
+        /// <summary>Returns the captured result for a specific enrolment.</summary>
+        /// <response code="200">Returns the result.</response>
+        /// <response code="404">No result captured yet.</response>
         // GET /api/enrolments/{id}/results  (Any logged in)
         [HttpGet("{id}/results")]
         public async Task<IActionResult> GetResult(int id)

@@ -12,12 +12,15 @@ namespace RaceDay.Api.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
+        
         private readonly RaceDayDbContext _context;
         public EventsController(RaceDayDbContext context) => _context = context;
 
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        /// <summary>Lists all events.</summary>
+        /// <response code="200">Returns all events.</response>
         // GET /api/events  (public)
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -28,6 +31,9 @@ namespace RaceDay.Api.Controllers
             return Ok(events);
         }
 
+        /// <summary>Returns full detail for a single event, including categories and venues.</summary>
+        /// <response code="200">Returns the event detail.</response>
+        /// <response code="404">Event not found.</response>
         // GET /api/events/{id}  (public)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -53,6 +59,9 @@ namespace RaceDay.Api.Controllers
             });
         }
 
+        /// <summary>Creates a new event, owned by the logged-in Organiser.</summary>
+        /// <remarks>Expects name, description, eventDate, and distanceKm.</remarks>
+        /// <response code="201">Event created.</response>
         // POST /api/events  (Organiser)
         [HttpPost]
         [Authorize(Roles = "Organiser")]
@@ -74,6 +83,10 @@ namespace RaceDay.Api.Controllers
             return StatusCode(StatusCodes.Status201Created, ev);
         }
 
+        /// <summary>Updates an event owned by the logged-in Organiser.</summary>
+        /// <response code="200">Event updated.</response>
+        /// <response code="403">You do not own this event.</response>
+        /// <response code="404">Event not found.</response>
         // PUT /api/events/{id}  (Organiser, owner only)
         [HttpPut("{id}")]
         [Authorize(Roles = "Organiser")]
@@ -93,6 +106,10 @@ namespace RaceDay.Api.Controllers
             return Ok(ev);
         }
 
+        /// <summary>Deletes an event owned by the logged-in Organiser.</summary>
+        /// <response code="204">Event deleted.</response>
+        /// <response code="403">You do not own this event.</response>
+        /// <response code="404">Event not found.</response>
         // DELETE /api/events/{id}  (Organiser, owner only)
         [HttpDelete("{id}")]
         [Authorize(Roles = "Organiser")]
@@ -107,6 +124,9 @@ namespace RaceDay.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>Lists all categories under a specific event.</summary>
+        /// <response code="200">Returns the event's categories.</response>
+        /// <response code="404">Event not found.</response>
         // GET /api/events/{id}/categories  (public)
         [HttpGet("{id}/categories")]
         public async Task<IActionResult> GetCategories(int id)
@@ -122,6 +142,9 @@ namespace RaceDay.Api.Controllers
             return Ok(categories);
         }
 
+        /// <summary>Creates a new category under an event owned by the logged-in Organiser.</summary>
+        /// <response code="201">Category created.</response>
+        /// <response code="403">You do not own this event.</response>
         // POST /api/events/{id}/categories  (Organiser, owner only)
         [HttpPost("{id}/categories")]
         [Authorize(Roles = "Organiser")]
@@ -145,6 +168,9 @@ namespace RaceDay.Api.Controllers
             return StatusCode(StatusCodes.Status201Created, category);
         }
 
+        /// <summary>Lists all enrolments for an event, visible to its owning Organiser.</summary>
+        /// <response code="200">Returns the event's enrolments.</response>
+        /// <response code="403">You do not own this event.</response>
         // GET /api/events/{id}/enrolments  (Organiser, owner only)
         [HttpGet("{id}/enrolments")]
         [Authorize(Roles = "Organiser")]

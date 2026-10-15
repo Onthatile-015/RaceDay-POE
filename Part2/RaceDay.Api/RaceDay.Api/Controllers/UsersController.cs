@@ -18,6 +18,9 @@ namespace RaceDay.Api.Controllers
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        /// <summary>Returns the profile of the currently logged-in user.</summary>
+        /// <response code="200">Returns the user profile.</response>
+        /// <response code="401">Not authenticated.</response>
         // GET /api/users/me
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
@@ -28,6 +31,10 @@ namespace RaceDay.Api.Controllers
             return Ok(new { user.UserId, user.FullName, user.Email, user.Role, user.CreatedAt });
         }
 
+        /// <summary>Updates the logged-in user's own profile details.</summary>
+        /// <remarks>Expects fullName and email in the request body.</remarks>
+        /// <response code="200">Profile updated.</response>
+        /// <response code="409">Email already in use by another account.</response>
         // PUT /api/users/me
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyProfile(UpdateProfileDto dto)
@@ -46,6 +53,8 @@ namespace RaceDay.Api.Controllers
             return Ok(new { user.UserId, user.FullName, user.Email, user.Role });
         }
 
+        /// <summary>Lists all enrolments belonging to the logged-in Participant.</summary>
+        /// <response code="200">Returns the participant's enrolments.</response>
         // GET /api/users/me/enrolments  (Participant)
         [HttpGet("me/enrolments")]
         [Authorize(Roles = "Participant")]
@@ -67,7 +76,8 @@ namespace RaceDay.Api.Controllers
 
             return Ok(enrolments);
         }
-
+        /// <summary>Returns the logged-in Participant's full personal result history.</summary>
+        /// <response code="200">Returns the participant's results.</response>
         // GET /api/users/me/results  (Participant)
         [HttpGet("me/results")]
         [Authorize(Roles = "Participant")]

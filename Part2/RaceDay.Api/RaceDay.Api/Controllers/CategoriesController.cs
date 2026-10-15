@@ -19,6 +19,9 @@ namespace RaceDay.Api.Controllers
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        /// <summary>Updates a category belonging to the logged-in Organiser's event.</summary>
+        /// <response code="200">Category updated.</response>
+        /// <response code="403">You do not own this category's event.</response>
         // PUT /api/categories/{id}  (Organiser, owner of parent event only)
         [HttpPut("{id}")]
         [Authorize(Roles = "Organiser")]
@@ -37,6 +40,9 @@ namespace RaceDay.Api.Controllers
             return Ok(category);
         }
 
+        /// <summary>Deletes a category belonging to the logged-in Organiser's event.</summary>
+        /// <response code="204">Category deleted.</response>
+        /// <response code="403">You do not own this category's event.</response>
         // DELETE /api/categories/{id}  (Organiser, owner of parent event only)
         [HttpDelete("{id}")]
         [Authorize(Roles = "Organiser")]
@@ -52,6 +58,10 @@ namespace RaceDay.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>Enrols the logged-in Participant into a category.</summary>
+        /// <response code="201">Enrolment created.</response>
+        /// <response code="404">Category not found.</response>
+        /// <response code="409">Already enrolled, or category is full.</response>
         // POST /api/categories/{id}/enrolments  (Participant)
         [HttpPost("{id}/enrolments")]
         [Authorize(Roles = "Participant")]

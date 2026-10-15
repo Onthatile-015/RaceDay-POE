@@ -21,6 +21,11 @@ namespace RaceDay.Api.Controllers
             _context = context;
         }
 
+        /// <summary>Registers a new user as either an Organiser or a Participant.</summary>
+        /// <remarks>Expects fullName, email, password, and role in the request body.</remarks>
+        /// <response code="201">User created successfully.</response>
+        /// <response code="400">Validation failed or invalid role.</response>
+        /// <response code="409">Email is already registered.</response>
         // POST /api/auth/register
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
@@ -53,6 +58,10 @@ namespace RaceDay.Api.Controllers
             });
         }
 
+        /// <summary>Authenticates a user and starts a session via an auth cookie.</summary>
+        /// <remarks>Expects email and password. On success, signs in the user and returns their profile.</remarks>
+        /// <response code="200">Login successful.</response>
+        /// <response code="401">Invalid email or password.</response>
         // POST /api/auth/login
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
@@ -82,7 +91,8 @@ namespace RaceDay.Api.Controllers
                 user.Role
             });
         }
-
+        /// <summary>Logs the current user out, ending their session.</summary>
+        /// <response code="204">Logged out successfully.</response>
         // POST /api/auth/logout
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
