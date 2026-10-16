@@ -109,7 +109,8 @@ A GitHub Actions workflow (`.github/workflows/dotnet-ci.yml`) builds the project
 
 **Successful build screenshot:**
 
-`[INSERT SCREENSHOT HERE]`
+<img width="519" height="85" alt="Screenshot 2026-10-16 164541" src="https://github.com/user-attachments/assets/0bc08c8f-4578-4dd1-be83-5bf0574ef303" />
+
 
 ## Video Walkthrough
 
