@@ -17,5 +17,14 @@ namespace RaceDay.Api.DTOs
 
         public string? Status { get; set; } // optional on create, used on update
 
+        [Required, RegularExpression("^(Run|Walk|Cycle)$", ErrorMessage = "Event type must be Run, Walk or Cycle.")]
+        public string EventType { get; set; } = "Run";
+
+        [MaxLength(200)]
+        public string? Address { get; set; }
+
+        [MaxLength(100)]
+        public string? City { get; set; }
+
     }
 }

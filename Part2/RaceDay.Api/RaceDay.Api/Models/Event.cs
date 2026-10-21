@@ -31,5 +31,11 @@ namespace RaceDay.Api.Models
         public ICollection<Category>? Categories { get; set; }
         public ICollection<Venue>? Venues { get; set; }
 
+        [Required, MaxLength(20)]
+        public string EventType { get; set; } = "Run";
+
+        [MaxLength(500)]
+        public string? BannerImageUrl { get; set; }
+
     }
 }

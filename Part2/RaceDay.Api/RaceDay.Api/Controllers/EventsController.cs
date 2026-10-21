@@ -26,7 +26,7 @@ namespace RaceDay.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var events = await _context.Events
-                .Select(e => new { e.EventId, e.Name, e.EventDate, e.DistanceKm, e.Status })
+                .Select(e => new { e.EventId, e.Name, e.EventDate, e.DistanceKm, e.Status, e.EventType, e.BannerImageUrl })
                 .ToListAsync();
             return Ok(events);
         }
@@ -54,6 +54,8 @@ namespace RaceDay.Api.Controllers
                 ev.DistanceKm,
                 ev.Status,
                 ev.OrganiserId,
+                ev.EventType,
+                ev.BannerImageUrl,
                 Categories = ev.Categories!.Select(c => new { c.CategoryId, c.Name, c.MaxParticipants, c.EntryFee }),
                 Venues = ev.Venues!.Select(v => new { v.VenueId, v.Address, v.City })
             });
@@ -74,7 +76,9 @@ namespace RaceDay.Api.Controllers
                 Description = dto.Description,
                 EventDate = dto.EventDate,
                 DistanceKm = dto.DistanceKm,
+                EventType = dto.EventType,
                 Status = "Upcoming"
+                
             };
 
             _context.Events.Add(ev);
@@ -100,6 +104,7 @@ namespace RaceDay.Api.Controllers
             ev.Description = dto.Description;
             ev.EventDate = dto.EventDate;
             ev.DistanceKm = dto.DistanceKm;
+            ev.EventType = dto.EventType;
             if (!string.IsNullOrWhiteSpace(dto.Status)) ev.Status = dto.Status;
 
             await _context.SaveChangesAsync();

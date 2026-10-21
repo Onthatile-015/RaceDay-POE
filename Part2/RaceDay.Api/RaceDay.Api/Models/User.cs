@@ -28,6 +28,10 @@ namespace RaceDay.Api.Models
         public ICollection<Result>? CapturedResults { get; set; }
 
 
+        [MaxLength(500)]
+        public string? ProfilePictureUrl { get; set; }
+
+
 
     }
 }
