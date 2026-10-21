@@ -19,15 +19,37 @@ namespace RaceDay.Api.Controllers
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        /// <summary>Lists all events.</summary>
-        /// <response code="200">Returns all events.</response>
-        // GET /api/events  (public)
+        /// <summary>Lists events, with optional filters for type, name, city, date range and distance.</summary>
+        /// <response code="200">Returns the matching events.</response>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string? eventType, string? search, string? city,
+            DateTime? from, DateTime? to, decimal? minDistanceKm, decimal? maxDistanceKm)
         {
-            var events = await _context.Events
-                .Select(e => new { e.EventId, e.Name, e.EventDate, e.DistanceKm, e.Status, e.EventType, e.BannerImageUrl })
+            var query = _context.Events.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(eventType)) query = query.Where(e => e.EventType == eventType);
+            if (!string.IsNullOrWhiteSpace(search)) query = query.Where(e => e.Name.Contains(search));
+            if (!string.IsNullOrWhiteSpace(city)) query = query.Where(e => e.Venues!.Any(v => v.City == city));
+            if (from.HasValue) query = query.Where(e => e.EventDate >= from.Value);
+            if (to.HasValue) query = query.Where(e => e.EventDate <= to.Value);
+            if (minDistanceKm.HasValue) query = query.Where(e => e.DistanceKm >= minDistanceKm.Value);
+            if (maxDistanceKm.HasValue) query = query.Where(e => e.DistanceKm <= maxDistanceKm.Value);
+
+            var events = await query
+                .OrderBy(e => e.EventDate)
+                .Select(e => new
+                {
+                    e.EventId,
+                    e.Name,
+                    e.EventDate,
+                    e.DistanceKm,
+                    e.Status,
+                    e.EventType,
+                    e.BannerImageUrl,
+                    City = e.Venues!.Select(v => v.City).FirstOrDefault()
+                })
                 .ToListAsync();
+
             return Ok(events);
         }
 
@@ -83,6 +105,12 @@ namespace RaceDay.Api.Controllers
 
             _context.Events.Add(ev);
             await _context.SaveChangesAsync();
+            if (!string.IsNullOrWhiteSpace(dto.Address) && !string.IsNullOrWhiteSpace(dto.City))
+            {
+                _context.Venues.Add(new Models.Venue { EventId = ev.EventId, Address = dto.Address, City = dto.City });
+                await _context.SaveChangesAsync();
+            }
+
 
             return StatusCode(StatusCodes.Status201Created, ev);
         }
@@ -107,6 +135,17 @@ namespace RaceDay.Api.Controllers
             ev.EventType = dto.EventType;
             if (!string.IsNullOrWhiteSpace(dto.Status)) ev.Status = dto.Status;
 
+            if (!string.IsNullOrWhiteSpace(dto.Address) && !string.IsNullOrWhiteSpace(dto.City))
+            {
+                var venue = await _context.Venues.FirstOrDefaultAsync(v => v.EventId == id);
+                if (venue == null)
+                    _context.Venues.Add(new Models.Venue { EventId = id, Address = dto.Address, City = dto.City });
+                else
+                {
+                    venue.Address = dto.Address;
+                    venue.City = dto.City;
+                }
+            }
             await _context.SaveChangesAsync();
             return Ok(ev);
         }
@@ -202,6 +241,33 @@ namespace RaceDay.Api.Controllers
             return Ok(enrolments);
 
         }
+        /// <summary>Lists the logged-in Organiser's own events with total enrolments per event.</summary>
+        /// <response code="200">Returns the organiser's events.</response>
+        [HttpGet("mine")]
+        [Authorize(Roles = "Organiser")]
+        public async Task<IActionResult> GetMine()
+        {
+            var events = await _context.Events
+                .Where(e => e.OrganiserId == CurrentUserId)
+                .OrderBy(e => e.EventDate)
+                .Select(e => new
+                {
+                    e.EventId,
+                    e.Name,
+                    e.EventDate,
+                    e.DistanceKm,
+                    e.Status,
+                    e.EventType,
+                    e.BannerImageUrl,
+                    TotalEnrolments = e.Categories!.SelectMany(c => c.Enrolments!).Count()
+                })
+                .ToListAsync();
 
+            return Ok(events);
         }
+
+
+
+
+    }
     }
