@@ -57,3 +57,63 @@ Successful build screenshot:
 Unlisted YouTube video explaining the planning documents, ERD decisions, endpoint plan choices and a live run of the SQL script in SSMS:
 
 https://youtu.be/8GjexLvnfMI
+
+
+# RaceDay — Part 2: RESTful API
+
+## Description
+
+This part builds the RESTful API that powers RaceDay, a web-based event management system for the South African road running, walking, and cycling community. The API is built with ASP.NET Core Web API in C#, using Entity Framework Core (Code-First) connected to the SQL Server database created in Part 1, and implements every endpoint from the Part 1 API plan.
+
+## Roles
+
+- **Organiser** — can create, edit, and delete events, manage event categories, capture participant results, and view all enrolments for their events.
+- **Participant** — can register, browse events, enrol in a category, view their own enrolments, and track their personal results.
+
+Role-based access is enforced at the API level using ASP.NET Core's `[Authorize(Roles = "...")]`, backed by cookie-based session authentication: once a user logs in, their session (including role) is maintained automatically for all subsequent requests via an encrypted auth cookie — no token needs to be manually attached to each call.
+
+## Tech Stack
+
+- ASP.NET Core Web API (.NET 10)
+- Entity Framework Core (Code-First), SQL Server
+- Cookie authentication for session management
+- BCrypt.Net-Next for password hashing
+- Swagger / Swashbuckle for interactive API documentation
+- xUnit + EF Core InMemory for unit testing
+- GitHub Actions for CI/CD
+
+## Setup and Run Instructions
+
+1. Clone the repository.
+2. Open `Part2/RaceDay.Api/RaceDay.Api.slnx` in Visual Studio 2026 (.NET 10 SDK required).
+3. Ensure SQL Server is running and the `RaceDayDB` database exists (created via the Part 1 SQL script in `docs/raceday_database_script.sql`).
+4. Update the connection string in `RaceDay.Api/appsettings.json` under `ConnectionStrings:RaceDayDb` to match your SQL Server instance.
+5. Press **F5** to build and run — the browser will open automatically to the Swagger UI at `/swagger`.
+6. All endpoints can be tested directly from the Swagger UI, including register, login, and role-protected actions (login first to set the session cookie, then subsequent calls in the same browser session are authenticated automatically).
+
+## Database Schema
+
+The API's Entity Framework Core models are explicitly mapped (via `ToTable()`) to the exact table names created in the Part 1 SQL script (`User`, `Event`, `Category`, `Venue`, `Enrolment`, `Result`), so Part 2 reads and writes against the same schema and seed data produced in Part 1 — no new tables or columns were introduced.
+
+## Running Unit Tests
+
+In Visual Studio: **Test → Run All Tests**, or via command line from the `Part2/RaceDay.Api/` folder:
+```
+dotnet test RaceDay.Api.slnx
+```
+Tests use an in-memory database (not the real SQL Server instance) so they run in isolation without affecting real data, and so they can run in GitHub Actions, which has no SQL Server installed.
+
+## CI/CD
+
+A GitHub Actions workflow (`.github/workflows/dotnet-ci.yml`) builds the project and runs all unit tests on every push to `main`.
+
+**Successful build screenshot:**
+
+<img width="519" height="85" alt="Screenshot 2026-10-16 164541" src="https://github.com/user-attachments/assets/0bc08c8f-4578-4dd1-be83-5bf0574ef303" />
+
+
+## Video Walkthrough
+
+Unlisted YouTube video demonstrating the running API, code structure, endpoints, authentication, and unit tests:
+
+https://youtu.be/YDWFK6O1apY
