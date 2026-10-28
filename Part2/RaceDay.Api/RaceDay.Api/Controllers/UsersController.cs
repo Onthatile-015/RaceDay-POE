@@ -28,7 +28,7 @@ namespace RaceDay.Api.Controllers
             var user = await _context.Users.FindAsync(CurrentUserId);
             if (user == null) return NotFound();
 
-            return Ok(new { user.UserId, user.FullName, user.Email, user.Role, user.CreatedAt });
+            return Ok(new { user.UserId, user.FullName, user.Email, user.Role, user.CreatedAt, user.ProfilePictureUrl });
         }
 
         /// <summary>Updates the logged-in user's own profile details.</summary>
@@ -60,21 +60,21 @@ namespace RaceDay.Api.Controllers
         [Authorize(Roles = "Participant")]
         public async Task<IActionResult> GetMyEnrolments()
         {
-            var enrolments = await _context.Enrolments
-                .Where(e => e.ParticipantId == CurrentUserId)
-                .Include(e => e.Category)
-                .ThenInclude(c => c!.Event)
-                .Select(e => new
-                {
-                    e.EnrolmentId,
-                    e.EnrolmentDate,
-                    e.Status,
-                    CategoryName = e.Category!.Name,
-                    EventName = e.Category.Event!.Name
-                })
-                .ToListAsync();
+                             var enrolments = await _context.Enrolments
+                    .Where(e => e.ParticipantId == CurrentUserId)
+                     .OrderByDescending(e => e.EnrolmentDate)
+                      .Select(e => new
+               {
+                     e.EnrolmentId, e.EnrolmentDate, e.Status,
+                  CategoryName = e.Category!.Name,
+                     EventId = e.Category.EventId,
+                   EventName = e.Category.Event!.Name,
+                  EventDate = e.Category.Event.EventDate,
+                EventType = e.Category.Event.EventType
+                                                            })
+                        .ToListAsync();
 
-            return Ok(enrolments);
+                          return Ok(enrolments);
         }
         /// <summary>Returns the logged-in Participant's full personal result history.</summary>
         /// <response code="200">Returns the participant's results.</response>
@@ -85,18 +85,18 @@ namespace RaceDay.Api.Controllers
         {
             var results = await _context.Results
                 .Where(r => r.Enrolment!.ParticipantId == CurrentUserId)
-                .Include(r => r.Enrolment)
-                .ThenInclude(e => e!.Category)
-                .ThenInclude(c => c!.Event)
+                .OrderByDescending(r => r.Enrolment!.Category!.Event!.EventDate)
                 .Select(r => new
-                {
-                    r.ResultId,
-                    r.FinishTime,
-                    r.Position,
-                    CategoryName = r.Enrolment!.Category!.Name,
-                    EventName = r.Enrolment.Category.Event!.Name
-                })
-                .ToListAsync();
+        {
+                 r.ResultId,
+                 r.FinishTime,
+                 r.Position,
+                 CategoryName = r.Enrolment!.Category!.Name,
+                 EventName = r.Enrolment.Category.Event!.Name,
+                 EventDate = r.Enrolment.Category.Event.EventDate,
+                 TotalFinishers = _context.Results.Count(x => x.Enrolment!.CategoryId == r.Enrolment.CategoryId)
+                         })
+                  .ToListAsync();
 
             return Ok(results);
         }
