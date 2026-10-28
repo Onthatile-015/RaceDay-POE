@@ -1,0 +1,33 @@
+﻿@model RaceDay.Mvc.ViewModels.CategoryFormViewModel
+@{
+  ViewData["Title"] = "Edit category";
+  var eventId = (int)ViewData["EventId"]!;
+  var categoryId = (int)ViewData["CategoryId"]!;
+}
+
+<div class="page-header"><h1 class="mb-0">Edit category</h1></div>
+
+<div class="card"><div class="card-body">
+  <form asp-action="EditCategory" asp-route-eventId="@eventId" asp-route-id="@categoryId" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+      <label asp-for="Name" class="form-label"></label>
+      <input asp-for="Name" class="form-control" />
+      <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label asp-for="MaxParticipants" class="form-label"></label>
+      <input asp-for="MaxParticipants" class="form-control" />
+      <span asp-validation-for="MaxParticipants" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label asp-for="EntryFee" class="form-label"></label>
+      <input asp-for="EntryFee" class="form-control" />
+      <span asp-validation-for="EntryFee" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a asp-action="Categories" asp-route-id="@eventId" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div></div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
