@@ -1,0 +1,75 @@
+﻿@model RaceDay.Mvc.Models.EventDetail
+@{
+  ViewData["Title"] = Model.Name;
+  bool open = Model.Status == "Upcoming" && Model.EventDate > DateTime.Now;
+  bool isParticipant = User.Identity?.IsAuthenticated == true && User.IsInRole("Participant");
+  bool isAnonymous = User.Identity?.IsAuthenticated != true;
+}
+
+<a asp-action="Index" class="text-muted">&larr; Back to events</a>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success mt-3">@TempData["Success"]</div> }
+@if (TempData["Error"] != null) { <div class="alert alert-warning mt-3">@TempData["Error"]</div> }
+
+<div class="card mt-3">
+  @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+  {
+    <img src="@Model.BannerImageUrl" class="event-banner event-banner-lg" alt="@Model.Name banner" />
+  }
+  <div class="card-body">
+    <span class="badge type-badge mb-2">@Model.EventType</span>
+    <h1>@Model.Name</h1>
+    <p class="lead mb-1">@Model.EventDate.ToString("dddd, d MMMM yyyy 'at' HH:mm")</p>
+    <p class="mb-3">Distance: <strong>@Model.DistanceKm km</strong> · Status: @Model.Status</p>
+    @if (!string.IsNullOrWhiteSpace(Model.Description)) { <p>@Model.Description</p> }
+
+    @if (Model.Venues.Any())
+    {
+      <h5>Location</h5>
+      <ul class="mb-0">
+        @foreach (var v in Model.Venues) { <li>@v.Address, @v.City</li> }
+      </ul>
+    }
+  </div>
+</div>
+
+<div class="card mt-4"><div class="card-body">
+  <h3>Categories</h3>
+  @if (!Model.Categories.Any())
+  {
+    <p class="text-muted mb-0">The organiser hasn't added any categories yet.</p>
+  }
+  else
+  {
+    @if (!open) { <div class="alert alert-secondary">Enrolment for this event is closed.</div> }
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead><tr><th>Category</th><th>Entry fee</th><th>Places</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var c in Model.Categories)
+        {
+          <tr>
+            <td>@c.Name</td>
+            <td>R @c.EntryFee.ToString("N2")</td>
+            <td>@c.MaxParticipants</td>
+            <td class="text-end">
+              @if (open && isParticipant)
+              {
+                <form asp-controller="Participant" asp-action="Enrol" method="post" class="d-inline">
+                  <input type="hidden" name="eventId" value="@Model.EventId" />
+                  <input type="hidden" name="categoryId" value="@c.CategoryId" />
+                  <button type="submit" class="btn btn-primary btn-sm">Enrol</button>
+                </form>
+              }
+              else if (open && isAnonymous)
+              {
+                <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-primary btn-sm">Log in to enrol</a>
+              }
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+</div></div>
