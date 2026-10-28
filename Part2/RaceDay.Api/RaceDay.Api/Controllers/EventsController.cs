@@ -159,11 +159,15 @@ namespace RaceDay.Api.Controllers
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> Delete(int id)
         {
-            var ev = await _context.Events.FindAsync(id);
+            var ev = await _context.Events
+                .Include(e => e.Venues)
+                .Include(e => e.Categories!).ThenInclude(c => c.Enrolments!).ThenInclude(en => en.Result)
+                .FirstOrDefaultAsync(e => e.EventId == id);
+
             if (ev == null) return NotFound();
             if (ev.OrganiserId != CurrentUserId) return Forbid();
 
-            _context.Events.Remove(ev);
+            _context.Events.Remove(ev); // EF removes the loaded venues, categories, enrolments and results first
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -234,7 +238,10 @@ namespace RaceDay.Api.Controllers
                     en.EnrolmentDate,
                     en.Status,
                     ParticipantName = en.Participant!.FullName,
-                    CategoryName = en.Category!.Name
+                    CategoryName = en.Category!.Name,
+                    ResultId = en.Result != null ? (int?)en.Result.ResultId : null,
+                    FinishTime = en.Result != null ? en.Result.FinishTime : null,
+                    Position = en.Result != null ? en.Result.Position : null
                 })
                 .ToListAsync();
 
