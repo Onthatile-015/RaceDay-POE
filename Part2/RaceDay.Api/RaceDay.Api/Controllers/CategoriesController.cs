@@ -52,6 +52,9 @@ namespace RaceDay.Api.Controllers
                 .FirstOrDefaultAsync(c => c.CategoryId == id);
             if (category == null) return NotFound();
             if (category.Event!.OrganiserId != CurrentUserId) return Forbid();
+            bool hasEnrolments = await _context.Enrolments.AnyAsync(e => e.CategoryId == id);
+            if (hasEnrolments)
+                return Conflict(new { message = "This category already has enrolments and can't be deleted." });
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
