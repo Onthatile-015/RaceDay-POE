@@ -29,6 +29,9 @@ namespace RaceDay.Api.Controllers
             var enrolment = await _context.Enrolments.FindAsync(id);
             if (enrolment == null) return NotFound();
             if (enrolment.ParticipantId != CurrentUserId) return Forbid();
+            bool hasResult = await _context.Results.AnyAsync(r => r.EnrolmentId == id);
+            if (hasResult)
+                return Conflict(new { message = "This entry already has a result and can't be withdrawn." });
 
             _context.Enrolments.Remove(enrolment);
             await _context.SaveChangesAsync();
@@ -62,7 +65,9 @@ namespace RaceDay.Api.Controllers
                 CapturedByOrganiserId = CurrentUserId
             };
 
+            enrolment.Status = "Completed";
             _context.Results.Add(result);
+
             await _context.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status201Created, result);
@@ -81,6 +86,29 @@ namespace RaceDay.Api.Controllers
             return Ok(new { result.ResultId, result.FinishTime, result.Position });
         }
 
+        /// <summary>Updates the captured result for an enrolment, by the Organiser who owns the event.</summary>
+        /// <response code="200">Result updated.</response>
+        /// <response code="403">You do not own this event.</response>
+        /// <response code="404">Enrolment or result not found.</response>
+        [HttpPut("{id}/results")]
+        [Authorize(Roles = "Organiser")]
+        public async Task<IActionResult> UpdateResult(int id, ResultDto dto)
+        {
+            var enrolment = await _context.Enrolments
+                .Include(e => e.Category).ThenInclude(c => c!.Event)
+                .FirstOrDefaultAsync(e => e.EnrolmentId == id);
+            if (enrolment == null) return NotFound();
+            if (enrolment.Category!.Event!.OrganiserId != CurrentUserId) return Forbid();
+
+            var result = await _context.Results.FirstOrDefaultAsync(r => r.EnrolmentId == id);
+            if (result == null) return NotFound();
+
+            result.FinishTime = dto.FinishTime;
+            result.Position = dto.Position;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { result.ResultId, result.FinishTime, result.Position });
+        }
 
     }
 }
