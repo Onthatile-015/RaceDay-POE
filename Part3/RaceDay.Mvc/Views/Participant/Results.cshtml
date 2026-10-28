@@ -1,0 +1,40 @@
+﻿@model List<RaceDay.Mvc.Models.MyResult>
+@{ ViewData["Title"] = "My results"; }
+
+<div class="page-header">
+  <h1 class="mb-0">My results</h1>
+  <p class="text-muted mb-0">Your race history across every event you've completed.</p>
+</div>
+
+@if (!Model.Any())
+{
+  <div class="card p-4 text-center text-muted">
+    No results yet. Results appear here once an organiser has captured them after the event.
+  </div>
+}
+else
+{
+  <div class="card"><div class="card-body table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th></tr></thead>
+      <tbody>
+      @foreach (var r in Model)
+      {
+        <tr>
+          <td>@r.EventName</td>
+          <td>@r.EventDate.ToString("d MMM yyyy")</td>
+          <td>@r.CategoryName</td>
+          <td><strong>@(r.FinishTime.HasValue ? r.FinishTime.Value.ToString(@"hh\:mm\:ss") : "-")</strong></td>
+          <td>
+            @if (r.Position.HasValue)
+            {
+              <span><strong>@Format.Ordinal(r.Position.Value)</strong> out of @r.TotalFinishers finishers</span>
+            }
+            else { <span>-</span> }
+          </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div></div>
+}

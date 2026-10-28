@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+  </Folder>
   <Project Path="RaceDay.Mvc.csproj" />
 </Solution>

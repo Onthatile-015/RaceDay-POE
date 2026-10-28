@@ -1,0 +1,56 @@
+﻿@model List<RaceDay.Mvc.Models.EventSummary>
+@{
+    ViewData["Title"] = "My events";
+}
+
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h1 class="mb-0">My events</h1>
+    <a asp-action="CreateEvent" class="btn btn-primary">+ New event</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="card p-4 text-center text-muted">You haven't created any events yet.</div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Type</th><th>Date</th><th>Distance</th><th>Enrolments</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var e in Model)
+                    {
+                        <tr>
+                            <td>@e.Name</td>
+                            <td>@e.EventType</td>
+                            <td>@e.EventDate.ToString("d MMM yyyy")</td>
+                            <td>@e.DistanceKm km</td>
+                            <td><span class="badge bg-dark">@e.TotalEnrolments</span></td>
+                            <td>@e.Status</td>
+                            <td class="text-end">
+                                <a asp-action="Categories" asp-route-id="@e.EventId" class="btn btn-outline-dark btn-sm">Categories</a>
+                                <a asp-action="Enrolments" asp-route-id="@e.EventId" class="btn btn-outline-dark btn-sm">Enrolments</a>
+                                <a asp-action="Results" asp-route-id="@e.EventId" class="btn btn-outline-dark btn-sm">Results</a>
+                                <a asp-action="EditEvent" asp-route-id="@e.EventId" class="btn btn-outline-primary btn-sm">Edit</a>
+                                <form asp-action="DeleteEvent" asp-route-id="@e.EventId" method="post" class="d-inline"
+                                      onsubmit="return confirm('Delete this event and all its categories and enrolments?');">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
