@@ -7,9 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  api-build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,11 +18,32 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore dependencies
+      - name: Restore API dependencies
         run: dotnet restore Part2/RaceDay.Api/RaceDay.Api.slnx
 
-      - name: Build
+      - name: Build API
         run: dotnet build Part2/RaceDay.Api/RaceDay.Api.slnx --no-restore --configuration Release
 
-      - name: Run tests
+      - name: Run unit tests
         run: dotnet test Part2/RaceDay.Api/RaceDay.Api.slnx --no-build --configuration Release --verbosity normal
+
+  mvc-build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore MVC dependencies
+        run: dotnet restore Part3/RaceDay.Mvc/RaceDay.Mvc.csproj
+
+      - name: Build MVC project
+        run: dotnet build Part3/RaceDay.Mvc/RaceDay.Mvc.csproj --no-restore --configuration Release
+
+      - name: Build Docker image
+        run: docker build -t raceday-mvc Part3/RaceDay.Mvc
