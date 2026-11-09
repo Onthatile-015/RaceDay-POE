@@ -103,7 +103,8 @@ The GitHub Actions workflow (`.github/workflows/dotnet-ci.yml`) runs on every pu
 
 **Successful build screenshot:**
 
-`[INSERT SCREENSHOT HERE]`
+<img width="596" height="67" alt="Screenshot 2026-11-09 103438" src="https://github.com/user-attachments/assets/0829dd1d-91cf-4cbb-958c-56e46fec4874" />
+
 
 ## Video walkthrough
 
