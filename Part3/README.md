@@ -109,4 +109,4 @@ The GitHub Actions workflow (`.github/workflows/dotnet-ci.yml`) runs on every pu
 
 Unlisted YouTube video demonstrating the running application, the MVC structure, the Blob Storage integration and the Docker setup:
 
-`[INSERT YOUTUBE LINK HERE]`
+https://youtu.be/ak4sfciFNcs
